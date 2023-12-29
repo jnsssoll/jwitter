@@ -1,5 +1,4 @@
 import { authService } from "fbase";
-
 const Profile = () => {
     const onLogOutClick = () => authService.signOut();
 
