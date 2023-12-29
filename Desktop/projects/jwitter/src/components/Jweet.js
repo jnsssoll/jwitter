@@ -1,18 +1,18 @@
-import {dbService} from "fbase";
+import {dbService, storageService} from "fbase";
 import {doc, deleteDoc, updateDoc} from "firebase/firestore";
 import {useState} from "react";
+import {deleteObject, ref} from "firebase/storage";
 
 const Jweet = ({ jweetObj, isOwner }) => {
     const [editing, setEditing] = useState(false);
     const [newJweet, setNewJweet] = useState(jweetObj.text);
     const onDeleteClick = async () => {
         const ok = window.confirm("삭제하시겠습니까?");
-        console.log(ok);
         if(ok) {
-            console.log(jweetObj.id);
             //const data = await dbService.doc(`jweets/${jweetObj.id}`)
-            const data = deleteDoc(doc(dbService, "jweets", jweetObj.id));
-            console.log(data);
+            await deleteDoc(doc(dbService, "jweets", jweetObj.id));
+            if (jweetObj.attachmentUrl != "")
+                await deleteObject(ref(storageService,jweetObj.attachmentUrl));
         }
     }
 
@@ -46,6 +46,9 @@ const Jweet = ({ jweetObj, isOwner }) => {
             ):(
                 <>
             <h4>{jweetObj.text}</h4>
+            {jweetObj.attachmentUrl && (
+                <img src={jweetObj.attachmentUrl} width="50px" height="50px" />
+            )}
             {isOwner && (
             <>
             <button onClick={onDeleteClick}>Delete Jweet</button>
