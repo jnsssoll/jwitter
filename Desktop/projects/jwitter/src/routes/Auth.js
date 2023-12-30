@@ -7,7 +7,7 @@ import {
     GithubAuthProvider,
 } from "firebase/auth";
 
-function Auth(){
+const Auth = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [newAccount, setNewAccount] = useState(true);
