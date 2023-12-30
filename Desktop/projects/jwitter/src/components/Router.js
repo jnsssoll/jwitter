@@ -7,6 +7,16 @@ const AppRouter = ({isLoggedIn, userObj, refreshUser }) => {
     return (
         <Router>
             {isLoggedIn && <Navigation userObj={userObj}/>}
+            <div
+                 style={{
+                    maxWidth: 890,
+                    width: "100%",
+                    margin: "0 auth",
+                    marginTop: 80,
+                    display: "fles",
+                    justifyContent: "center",
+                 }}
+                 >
             <Routes>
                 {isLoggedIn ? (
                  <>
@@ -17,13 +27,14 @@ const AppRouter = ({isLoggedIn, userObj, refreshUser }) => {
                         userObj={userObj} />}></Route>
                  </>
                 ) : (
+                    <>
                     <Route exact path="/" element={<Auth />}>
-                        
                     </Route>
-                
+                    </>
                 )}
                 <Route path="*" element={<Navigate replace to="/" />}/>
             </Routes>
+            </div>
         </Router>
     );
 };

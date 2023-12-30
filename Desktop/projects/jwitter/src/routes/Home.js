@@ -4,7 +4,8 @@ import {dbService, storageService} from "fbase";
 import Jweet from "components/Jweet"
 import {v4 as uuidv4} from "uuid";
 import {ref, uploadString, getDownloadURL} from "firebase/storage";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faPlus, faTimes} from "@fortawesome/free-solid-svg-icons";
 
 const Home = ({userObj}) => {
     const [jweet, setJweet] = useState("");
@@ -24,6 +25,9 @@ const Home = ({userObj}) => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
+        if (jweet === "") {
+            return;
+        }
         let attachmentUrl = "";
         if (attachment !== "") {
         const attachmentRef = ref(storageService,`${userObj.uid}/${uuidv4()}`);
@@ -61,34 +65,56 @@ const Home = ({userObj}) => {
             } = finishedEvent;
             setAttachment(result);
         };
-        reader.readAsDataURL(theFile);
+        if(Boolean(theFile)) {
+            reader.readAsDataURL(theFile);
+        }
     };
 
     const onClearAttachment = () => setAttachment("");
 
     return (
-        <>
-        <form onSubmit={onSubmit}>
-            <input value={jweet} onChange={onChange} type="text"
+        <div className="container">
+        <form onSubmit={onSubmit} className="factoryForm">
+            <div className="factoryInput__container">
+            <input 
+            className="factoryInput__input"
+            value={jweet} onChange={onChange} type="text"
             placeholder="What's on your mind?" 
             maxLength={120} />
-            <input type="file" accept="image/*" onChange={onFileChange} />   
-            <input type="submit" value="Jweet" />
+        <input type="submit" value="&rarr;" className="factoryInput__arrow"/>
+        </div>
+        <label htmlFor="attach-file" className="factoryInput__label">
+            <span>Add photos</span>
+            <FontAwesomeIcon icon={faPlus} />
+        </label>
+
+        <input 
+        id="attach-file"
+        type="file" accept="image/*" onChange={onFileChange}
+        style={{opacity: 0,}} />   
+            
             {attachment && (
-                <div>
-                    <img src={attachment} width="50px" height="50px" />
-                    <button onClick={onClearAttachment}>Clear</button>
+                <div className="factoryForm__attachment">
+                    <img src={attachment} 
+                    style={{
+                        backgroundImage: attachment,
+                    }} />
+                    <div className="factoryForm__clear" onClick={onClearAttachment}>
+                        <span>Remove</span>
+                        <FontAwesomeIcon icon={faTimes} />
+                        </div>
                 </div>
             )}
         </form>
-        <div>
+
+        <div style={{marginTop: 30}}>
             {jweets.map((jweet) => (
                 <Jweet key={jweet.id} jweetObj={jweet}
                 isOwner={jweet.creatorId === userObj.uid}
                 />
             ))}
         </div>
-        </>
+        </div>
     );
 };
 

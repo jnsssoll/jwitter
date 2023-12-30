@@ -1,3 +1,8 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faTwitter, faGoogle, faGithub,
+} from "@fortawesome/free-brands-svg-icons";
+
 import { authService, firebaseInstance } from "fbase";
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword, } from "firebase/auth";
 import {useState} from "react";
@@ -6,6 +11,7 @@ import {
     GoogleAuthProvider,
     GithubAuthProvider,
 } from "firebase/auth";
+
 
 const Auth = () => {
     const [email, setEmail] = useState("");
@@ -59,29 +65,38 @@ const Auth = () => {
     };
 
     return (
-        <div>
-            <form onSubmit={onSubmit}>
+        <div className="authContainer">
+            <FontAwesomeIcon
+                icon={faTwitter}
+                color={"#04AAFF"}
+                size="3x"
+                style={{marginBottom: 30}}
+                />
+            <form onSubmit={onSubmit} className="container">
                 <input 
                 name="email"
                 type="email" placeholder="Email" required 
                 value={email}
                 onChange={onChange}
+                className="authInput"
                 />
                 <input 
                 name="password"
                 type="password" placeholder="Password" required
                 value={password}
                 onChange={onChange}
+                className="authInput"
                  />
-                <input type="submit" value={newAccount ? "Create Account" : "Log In"} />
-                {error}
+                <input type="submit" value={newAccount ? "Create Account" : "Log In"}
+                className="authInput authSubmit" />
+                {error && <span className="authError">{error}</span>}
             </form>
-            <span onClick={toggleAccount}>
+            <span onClick={toggleAccount} className="authSwitch">
                 {newAccount? "Sign in" : "Create Account"}
             </span>
-            <div>
-                <button onClick={onSocialClick} name="google">Continue with Google</button>
-                <button onClick={onSocialClick} name="github">Continue with Github</button>
+            <div className="authBtns">
+                <button onClick={onSocialClick} name="google" className="authBtn">Continue with Google <FontAwesomeIcon icon={faGoogle} /></button>
+                <button onClick={onSocialClick} name="github" className="authBtn">Continue with Github <FontAwesomeIcon icon={faGithub} /></button>
             </div>
         </div>
     );
